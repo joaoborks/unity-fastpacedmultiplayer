@@ -14,14 +14,17 @@ public class AuthCharServer : MonoBehaviour
     int movesMade;
     int serverTick;
 
+    CharacterController charCtrl;
+
     void Awake()
     {
         inputBuffer = new Queue<Vector2>();
         character = GetComponent<AuthoritativeCharacter>();
         character.state = CharacterState.Zero;
+        charCtrl = GetComponent<CharacterController>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         serverTick++;
         if (movesMade > 0)
@@ -32,19 +35,22 @@ public class AuthCharServer : MonoBehaviour
             while ((movesMade < character.inputBufferSize && inputBuffer.Count > 0))
             {
                 state = CharacterState.Move(state, inputBuffer.Dequeue(), serverTick);
+                charCtrl.Move(state.position - transform.position);
                 movesMade++;
             }
             if (movesMade > 0)
             {
+                state.position = transform.position;
                 character.state = state;
                 character.OnServerStateChange(state);
             }
         }
+        Debug.Log(serverTick);
     }
 
-    public void Move(Vector2[] inputs)
+    public void Move(CompressedInput[] inputs)
     {
-        foreach (Vector2 input in inputs)
-            inputBuffer.Enqueue(input);
+        foreach (var input in inputs)
+            inputBuffer.Enqueue(input.ToVector2);
     }
 }

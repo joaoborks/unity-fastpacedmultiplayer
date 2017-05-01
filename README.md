@@ -11,4 +11,8 @@ Based on the references:
 - [Unity Networking Entity Interpolation Part 2 - Clientside Input Buffering](http://www.gamasutra.com/blogs/ChristianArellano/20161104/284933/UNET_Unity_5_Networking_Entity_Interpolation_Part_2_of_6__Clientside_Input_Buffering.php)
 - [Fast-Paced Multiplayer by Gabriel Gambetta](http://www.gabrielgambetta.com/fpm1.html)
 - [Networked Physics by Glenn Fiedler](http://gafferongames.com/networked-physics/introduction-to-networked-physics/)
+- [Valve Developer Multiplayer Networking](https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking)
+- [Valve Developer Latency Compensation](https://developer.valvesoftware.com/wiki/Latency_Compensating_Methods_in_Client/Server_In-game_Protocol_Design_and_Optimization)
+- [Unity Networking Official Repository](https://bitbucket.org/Unity-Technologies/networking/overview)
 
+I'm currently working on a multiplayer project, and I use this repository for testing, but later on, I hope to create a strong foundation with this to use as a substitute to the Network Transform component on server-authoritative games.

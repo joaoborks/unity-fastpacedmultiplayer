@@ -5,6 +5,8 @@
  */
 
 using UnityEngine;
+using System.Collections;
+using System.Linq;
 
 public struct CharacterState
 {
@@ -12,6 +14,14 @@ public struct CharacterState
     public Vector3 eulerAngles;
     public int moveNum;
     public int timestamp;
+
+    public CharacterState(BitArray syncState)
+    {
+        position = Vector3.zero;
+        eulerAngles = Vector3.zero;
+        moveNum = 0;
+        timestamp = 0;
+    }
 
     public static CharacterState Zero
     {
@@ -42,8 +52,8 @@ public struct CharacterState
     {
         return new CharacterState
         {
-            position = 0.125f * (Vector3)Vector2.ClampMagnitude(input, 1f) + previous.position,
-            eulerAngles = 0.125f * (Vector3)Vector2.ClampMagnitude(input, 1f) + previous.position,
+            position = 0.125f * new Vector3(input.x, 0, input.y) + previous.position,
+            eulerAngles = Vector3.zero,
             moveNum = previous.moveNum + 1,
             timestamp = timestamp
         };

@@ -7,7 +7,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-[NetworkSettings(channel = 2)]
+[NetworkSettings(channel = 2, sendInterval = .05f)]
 public class AuthoritativeCharacter : NetworkBehaviour
 {
     public int inputBufferSize = 5;
@@ -15,9 +15,11 @@ public class AuthoritativeCharacter : NetworkBehaviour
 
     [SyncVar(hook = "OnServerStateChange")]
     public CharacterState state = CharacterState.Zero;
-
+    
     IAuthCharStateHandler stateHandler;
     AuthCharServer server;
+
+    CharacterController charCtrl;
 
     public override void OnStartServer()
     {
@@ -27,29 +29,31 @@ public class AuthoritativeCharacter : NetworkBehaviour
 
     void Start()
     {
+        charCtrl = GetComponent<CharacterController>();
         if (!isLocalPlayer)
         {
             stateHandler = gameObject.AddComponent<AuthCharObserver>();
             return;
         }
+        GetComponentInChildren<Renderer>().material.color = Color.green;
         stateHandler = gameObject.AddComponent<AuthCharPredictor>();
         gameObject.AddComponent<AuthCharInput>();
     }
 
     public void SyncState(CharacterState overrideState)
     {
-        transform.position = overrideState.position;
+        charCtrl.Move(overrideState.position - transform.position);
     }
 
     public void OnServerStateChange(CharacterState newState)
     {
         state = newState;
         if (stateHandler != null)
-            stateHandler.OnStateChange(newState);
+            stateHandler.OnStateChange(state);
     }
 
     [Command(channel = 0)]
-    public void CmdMove(Vector2[] inputs)
+    public void CmdMove(CompressedInput[] inputs)
     {
         server.Move(inputs);
     }

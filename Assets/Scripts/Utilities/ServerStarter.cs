@@ -16,8 +16,13 @@ public class ServerStarter : MonoBehaviour
         var args = Environment.GetCommandLineArgs();
         if (args.Any((arg) => arg == "servermode"))
         {
-            Screen.SetResolution(800, 600, false);
+            Application.targetFrameRate = 60;
             NetworkManager.singleton.StartServer();
+        }
+        else if (args.Any((arg) => arg == "gamemode"))
+        {
+            NetworkManager.singleton.StartClient();
+            AuthCharInput.simulated = true;
         }
         else
             Destroy(gameObject);

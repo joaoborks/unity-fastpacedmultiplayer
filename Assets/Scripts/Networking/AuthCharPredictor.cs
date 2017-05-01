@@ -28,7 +28,8 @@ public class AuthCharPredictor : MonoBehaviour, IAuthCharStateHandler
 
     public void OnStateChange(CharacterState newState)
     {
-        while (pendingMoves.Count > predictedState.moveNum - character.state.moveNum)
+        var n = predictedState.moveNum - character.state.moveNum;
+        while (n >= 0 && pendingMoves.Count > n)
             pendingMoves.Dequeue();
         UpdatePredictedState();
     }
