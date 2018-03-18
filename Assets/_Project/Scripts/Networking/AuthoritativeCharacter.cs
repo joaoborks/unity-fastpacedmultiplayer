@@ -7,11 +7,19 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-[NetworkSettings(channel = 2, sendInterval = .05f)]
+[NetworkSettings(channel = 2)]
 public class AuthoritativeCharacter : NetworkBehaviour
 {
-    public int inputBufferSize = 5;
-    public int interpolationDelay = 10;
+    /// <summary>
+    /// Controls how many inputs are needed before sending update command
+    /// </summary>
+    public int InputBufferSize { get; private set; }
+
+    /// <summary>
+    /// Controls how many input updates are sent per second
+    /// </summary>
+    [SerializeField, Range(10, 50), Tooltip("In steps per second")]
+    int inputUpdateRate = 10;
 
     [SyncVar(hook = "OnServerStateChange")]
     public CharacterState state = CharacterState.Zero;
@@ -20,6 +28,11 @@ public class AuthoritativeCharacter : NetworkBehaviour
     AuthCharServer server;
 
     CharacterController charCtrl;
+
+    void Awake()
+    {
+        InputBufferSize = (int)(1 / Time.fixedDeltaTime) / inputUpdateRate;
+    }
 
     public override void OnStartServer()
     {

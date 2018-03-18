@@ -33,7 +33,7 @@ public static class BuildTools
     {
         BuildPlayerOptions opts = new BuildPlayerOptions
         {
-            options = BuildOptions.BuildScriptsOnly,
+            options = BuildOptions.Development,
             locationPathName = GetSaveFile("buildPath"),
             target = BuildTarget.StandaloneWindows
         };

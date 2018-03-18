@@ -6,8 +6,8 @@
 
 using UnityEngine;
 using System.Collections;
-using System.Linq;
 
+[System.Serializable]
 public struct CharacterState
 {
     public Vector3 position;
@@ -21,6 +21,11 @@ public struct CharacterState
         eulerAngles = Vector3.zero;
         moveNum = 0;
         timestamp = 0;
+    }
+
+    public override string ToString()
+    {
+        return string.Format("CharacterState Pos:{0}|Rot:{1}|MoveNum:{2}|Timestamp:{3}", position, eulerAngles, moveNum, timestamp);
     }
 
     public static CharacterState Zero
@@ -53,7 +58,7 @@ public struct CharacterState
         return new CharacterState
         {
             position = 0.125f * new Vector3(input.x, 0, input.y) + previous.position,
-            eulerAngles = Vector3.zero,
+            eulerAngles = previous.eulerAngles,
             moveNum = previous.moveNum + 1,
             timestamp = timestamp
         };

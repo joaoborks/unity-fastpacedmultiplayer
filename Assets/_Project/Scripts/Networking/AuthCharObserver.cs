@@ -24,9 +24,8 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
 
     void Update()
     {
-        clientTick++;
-        LinkedListNode<CharacterState> fromNode = stateBuffer.First;
-        LinkedListNode<CharacterState> toNode = fromNode.Next;
+        var fromNode = stateBuffer.First;
+        var toNode = fromNode.Next;
         while (toNode != null && toNode.Value.timestamp <= clientTick)
         {
             fromNode = toNode;
@@ -34,6 +33,11 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
             stateBuffer.RemoveFirst();
         }
         SetObservedState(toNode != null ? CharacterState.Interpolate(fromNode.Value, toNode.Value, clientTick) : fromNode.Value);
+    }
+
+    void FixedUpdate()
+    {
+        clientTick++;
     }
 
     public void OnStateChange(CharacterState newState)
@@ -44,10 +48,10 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
     void AddState(CharacterState state)
     {
         stateBuffer.AddLast(state);
-        clientTick = state.timestamp - character.interpolationDelay;
-        while (stateBuffer.First.Value.timestamp <= clientTick)
+        clientTick = state.timestamp;
+        while (stateBuffer.First.Value.timestamp < clientTick)
             stateBuffer.RemoveFirst();
-        interpolated.timestamp = Mathf.Max(clientTick, stateBuffer.First.Value.timestamp - character.interpolationDelay);
+        interpolated.timestamp = Mathf.Max(clientTick, stateBuffer.First.Value.timestamp);
         stateBuffer.AddFirst(interpolated);
         if (interpolated.timestamp < clientTick)
             return;

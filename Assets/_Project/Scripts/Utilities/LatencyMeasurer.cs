@@ -13,21 +13,19 @@ public class LatencyMeasurer : MonoBehaviour
     public Gradient valueGradient;
     [Range(200, 500)]
     public int badLatency = 300;
-
-    NetworkManager net;
+    
     Text textValue;
 
     void Start()
     {
-        net = NetworkManager.singleton;
         textValue = GetComponent<Text>();
     }
 
     void Update()
     {
         var ping = -1;
-        if (net.client != null)
-            ping = net.client.GetRTT();
+        if (NetworkManager.singleton.client != null)
+            ping = NetworkManager.singleton.client.GetRTT();
         if (ping >= 0)
         {
             textValue.text = ping.ToString();

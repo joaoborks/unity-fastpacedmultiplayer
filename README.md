@@ -16,3 +16,16 @@ Based on the references:
 - [Unity Networking Official Repository](https://bitbucket.org/Unity-Technologies/networking/overview)
 
 I'm currently working on a multiplayer project, and I use this repository for testing, but later on, I hope to create a strong foundation with this to use as a substitute to the Network Transform component on server-authoritative games.
+
+### What's this about?
+
+This is a work in progress framework to help developing server authoritative games on Unity. It is recommended for **fast paced multiplayer games** such as shooters or racing games. This does **not provide** any type of server or database solution, as it only acts on the **sync** methods of the entities. Head over to the [wiki](https://github.com/JoaoBorks/unity-fastpacedmultiplayer/wiki) for further knowledge and usage guides.
+
+### How to test
+
+1. On the top menu, click Tools>Quick Build
+2. Choose a folder to deploy your test build
+3. Click Tools>Run Server to run the authoritative server
+4. Click Tools>Run Client to run a simulated client (You can press F1 to toggle movement simulation)
+5. Run the game on the editor then select Client on the Network HUD
+6. Move around and watch the sync between the different game windows

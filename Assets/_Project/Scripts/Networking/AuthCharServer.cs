@@ -26,13 +26,12 @@ public class AuthCharServer : MonoBehaviour
 
     void Update()
     {
-        serverTick++;
         if (movesMade > 0)
             movesMade--;
         if (movesMade == 0)
         {
             CharacterState state = character.state;
-            while ((movesMade < character.inputBufferSize && inputBuffer.Count > 0))
+            while ((movesMade < character.InputBufferSize && inputBuffer.Count > 0))
             {
                 state = CharacterState.Move(state, inputBuffer.Dequeue(), serverTick);
                 charCtrl.Move(state.position - transform.position);
@@ -45,7 +44,11 @@ public class AuthCharServer : MonoBehaviour
                 character.OnServerStateChange(state);
             }
         }
-        Debug.Log(serverTick);
+    }
+
+    void FixedUpdate()
+    {
+        serverTick++;        
     }
 
     public void Move(CompressedInput[] inputs)

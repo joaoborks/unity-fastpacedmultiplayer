@@ -14,8 +14,8 @@ public struct CompressedInput
 
     public CompressedInput(Vector2 inputVector)
     {
-        x = (sbyte)(inputVector.x * sbyte.MaxValue);
-        y = (sbyte)(inputVector.y * sbyte.MaxValue);
+        x = (sbyte)Mathf.Clamp(inputVector.x * sbyte.MaxValue, sbyte.MinValue, sbyte.MaxValue);
+        y = (sbyte)Mathf.Clamp(inputVector.y * sbyte.MaxValue, sbyte.MinValue, sbyte.MaxValue);
     }
 
     public Vector2 ToVector2

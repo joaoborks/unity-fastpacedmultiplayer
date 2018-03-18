@@ -24,7 +24,7 @@ public class ServerStarter : MonoBehaviour
             NetworkManager.singleton.StartClient();
             AuthCharInput.simulated = true;
         }
-        else
-            Destroy(gameObject);
+
+        Destroy(gameObject);
     }
 }

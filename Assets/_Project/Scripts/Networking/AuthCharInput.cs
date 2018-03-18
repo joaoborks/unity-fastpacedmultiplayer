@@ -38,7 +38,11 @@ public class AuthCharInput : MonoBehaviour
             return;
         predictor.AddInput(input);
         inputBuffer.Add(input);
-        if (inputBuffer.Count < character.inputBufferSize)
+    }
+
+    void FixedUpdate()
+    {
+        if (inputBuffer.Count < character.InputBufferSize)
             return;
         character.CmdMove(ConvertInputArray());
         inputBuffer.Clear();
