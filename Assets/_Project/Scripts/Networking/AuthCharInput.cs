@@ -44,15 +44,10 @@ public class AuthCharInput : MonoBehaviour
     {
         if (inputBuffer.Count < character.InputBufferSize)
             return;
-        character.CmdMove(ConvertInputArray());
+        character.CmdMove(inputBuffer.ToArray());
         inputBuffer.Clear();
     }
-
-    public void Invert()
-    {
-        simVector.x *= -1;
-    }
-
+    
     CompressedInput[] ConvertInputArray()
     {
         var compressedArray = new CompressedInput[inputBuffer.Count];

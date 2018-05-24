@@ -31,6 +31,8 @@ public class AuthCharPredictor : MonoBehaviour, IAuthCharStateHandler
         var n = predictedState.moveNum - character.state.moveNum;
         while (n >= 0 && pendingMoves.Count > n)
             pendingMoves.Dequeue();
+        if (newState.moveNum == predictedState.moveNum)
+            predictedState = newState;
         UpdatePredictedState();
     }
 
@@ -38,7 +40,7 @@ public class AuthCharPredictor : MonoBehaviour, IAuthCharStateHandler
     {
         predictedState = character.state;
         foreach (Vector2 input in pendingMoves)
-            predictedState = CharacterState.Move(predictedState, input, 0);
+            predictedState = CharacterState.Move(predictedState, input, character.Speed, 0);
         character.SyncState(predictedState);
     }
 }

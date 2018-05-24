@@ -32,7 +32,7 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
             toNode = fromNode.Next;
             stateBuffer.RemoveFirst();
         }
-        SetObservedState(toNode != null ? CharacterState.Interpolate(fromNode.Value, toNode.Value, clientTick) : fromNode.Value);
+        SetObservedState(toNode != null ? CharacterState.Interpolate(fromNode.Value, toNode.Value, clientTick) : CharacterState.Extrapolate(fromNode.Value, clientTick));
     }
 
     void FixedUpdate()

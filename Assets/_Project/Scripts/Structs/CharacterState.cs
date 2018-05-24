@@ -12,20 +12,14 @@ public struct CharacterState
 {
     public Vector3 position;
     public Vector3 eulerAngles;
+    public Vector3 velocity;
+    public Vector3 angularVelocity;
     public int moveNum;
     public int timestamp;
-
-    public CharacterState(BitArray syncState)
-    {
-        position = Vector3.zero;
-        eulerAngles = Vector3.zero;
-        moveNum = 0;
-        timestamp = 0;
-    }
-
+    
     public override string ToString()
     {
-        return string.Format("CharacterState Pos:{0}|Rot:{1}|MoveNum:{2}|Timestamp:{3}", position, eulerAngles, moveNum, timestamp);
+        return string.Format("CharacterState Pos:{0}|Rot:{1}|Vel:{2}|AngVel:{3}|MoveNum:{4}|Timestamp:{5}", position, eulerAngles, velocity, angularVelocity, moveNum, timestamp);
     }
 
     public static CharacterState Zero
@@ -53,14 +47,30 @@ public struct CharacterState
         };
     }
 
-    public static CharacterState Move(CharacterState previous, Vector2 input, int timestamp)
+    public static CharacterState Extrapolate(CharacterState from, int clientTick)
     {
+        int t = clientTick - from.timestamp;
         return new CharacterState
         {
-            position = 0.125f * new Vector3(input.x, 0, input.y) + previous.position,
+            position = from.position + from.velocity * t,
+            eulerAngles = from.eulerAngles + from.eulerAngles * t,
+            moveNum = from.moveNum,
+            timestamp = from.timestamp
+        };
+    }
+
+    public static CharacterState Move(CharacterState previous, Vector2 input, float speed, int timestamp)
+    {
+        var state =  new CharacterState
+        {
+            position = speed * Time.fixedDeltaTime * new Vector3(input.x, 0, input.y) + previous.position,
             eulerAngles = previous.eulerAngles,
             moveNum = previous.moveNum + 1,
             timestamp = timestamp
         };
+        var timestepInterval = timestamp - previous.timestamp + 1;
+        state.velocity = (state.position - previous.position) / timestepInterval;
+        state.angularVelocity = (state.eulerAngles - previous.eulerAngles) / timestepInterval;
+        return state;
     }
 }

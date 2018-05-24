@@ -6,10 +6,12 @@
 
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 
 [NetworkSettings(channel = 2)]
 public class AuthoritativeCharacter : NetworkBehaviour
 {
+    public float Speed { get { return speed; } }
     /// <summary>
     /// Controls how many inputs are needed before sending update command
     /// </summary>
@@ -20,6 +22,8 @@ public class AuthoritativeCharacter : NetworkBehaviour
     /// </summary>
     [SerializeField, Range(10, 50), Tooltip("In steps per second")]
     int inputUpdateRate = 10;
+    [HideInInspector, SerializeField, Range(5f, 15f)]
+    float speed = 6.25f;
 
     [SyncVar(hook = "OnServerStateChange")]
     public CharacterState state = CharacterState.Zero;
@@ -66,7 +70,7 @@ public class AuthoritativeCharacter : NetworkBehaviour
     }
 
     [Command(channel = 0)]
-    public void CmdMove(CompressedInput[] inputs)
+    public void CmdMove(Vector2[] inputs)
     {
         server.Move(inputs);
     }

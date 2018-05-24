@@ -33,8 +33,8 @@ public class AuthCharServer : MonoBehaviour
             CharacterState state = character.state;
             while ((movesMade < character.InputBufferSize && inputBuffer.Count > 0))
             {
-                state = CharacterState.Move(state, inputBuffer.Dequeue(), serverTick);
-                charCtrl.Move(state.position - transform.position);
+                state = CharacterState.Move(state, inputBuffer.Dequeue(), character.Speed, serverTick);
+                charCtrl.Move(state.velocity);
                 movesMade++;
             }
             if (movesMade > 0)
@@ -51,9 +51,9 @@ public class AuthCharServer : MonoBehaviour
         serverTick++;        
     }
 
-    public void Move(CompressedInput[] inputs)
+    public void Move(Vector2[] inputs)
     {
         foreach (var input in inputs)
-            inputBuffer.Enqueue(input.ToVector2);
+            inputBuffer.Enqueue(input);
     }
 }
