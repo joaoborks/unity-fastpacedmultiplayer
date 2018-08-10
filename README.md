@@ -3,6 +3,8 @@ Unity Fast Paced Multiplayer
 
 *A Unity project to build the base functionality for a Authoritative Server, with Lag Compensation, Client side Prediction/Server side Reconciliation and Entity Interpolation*
 
+**WARNING:** Unity has announced they are working on a [new multiplayer framework](https://blogs.unity3d.com/2018/08/02/evolving-multiplayer-games-beyond-unet/) and deprecating UNet on Unity 2018.4 (LTS). This should **not** stop me from working on this project as far as I still find time to dedicate to it.
+
 Based on the references:
 ---
 - [Unity Networking Tutorial Part 1 - Introducing the HLAPI](http://gamasutra.com/blogs/ChristianArellano/20150922/254218/UNET_Unity_5_Networking_Tutorial_Part_1_of_3__Introducing_the_HLAPI.php)
