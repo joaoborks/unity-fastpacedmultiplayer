@@ -12,7 +12,6 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
     LinkedList<CharacterState> stateBuffer;
     AuthoritativeCharacter character;
     int clientTick = 0;
-    int ticksBehind = 10;
 
     void Awake()
     {
@@ -24,7 +23,7 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
 
     void Update()
     {
-        int pastTick = clientTick - ticksBehind;
+        int pastTick = clientTick - character.interpolationDelay;
         var fromNode = stateBuffer.First;
         var toNode = fromNode.Next;
         while (toNode != null && toNode.Value.timestamp <= pastTick)

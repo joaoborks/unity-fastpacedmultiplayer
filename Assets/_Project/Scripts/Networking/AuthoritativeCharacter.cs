@@ -24,6 +24,8 @@ public class AuthoritativeCharacter : NetworkBehaviour
     int inputUpdateRate = 10;
     [HideInInspector, SerializeField, Range(5f, 15f)]
     float speed = 6.25f;
+    [SerializeField, Range(1, 60), Tooltip("In steps per second")]
+    public int interpolationDelay = 12;
 
     [SyncVar(hook = "OnServerStateChange")]
     public CharacterState state = CharacterState.Zero;
