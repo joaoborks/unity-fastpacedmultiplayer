@@ -6,41 +6,52 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AuthCharPredictor : MonoBehaviour, IAuthCharStateHandler
 {
-    Queue<Vector2> pendingMoves;
+    LinkedList<CharacterInput> pendingInputs;
     AuthoritativeCharacter character;
     CharacterState predictedState;
+    private CharacterState lastServerState = CharacterState.Zero;
 
     void Awake()
     {
-        pendingMoves = new Queue<Vector2>();
+        pendingInputs = new LinkedList<CharacterInput>();
         character = GetComponent<AuthoritativeCharacter>();
-        UpdatePredictedState();
     }
 
-    public void AddInput(Vector2 input)
+    public void AddInput(CharacterInput input)
     {
-        pendingMoves.Enqueue(input);
-        UpdatePredictedState();
+        pendingInputs.AddLast(input);
+        ApplyInput(input);    
+        character.SyncState(predictedState);
     }
 
     public void OnStateChange(CharacterState newState)
     {
-        var n = predictedState.moveNum - character.state.moveNum;
-        while (n >= 0 && pendingMoves.Count > n)
-            pendingMoves.Dequeue();
-        if (newState.moveNum == predictedState.moveNum)
-            predictedState = newState;
+        if (newState.timestamp <= lastServerState.timestamp) return;
+        while (pendingInputs.Count > 0 && pendingInputs.First().inputNum <= newState.moveNum)
+        {
+            pendingInputs.RemoveFirst();
+        }
+        predictedState = newState;
+        lastServerState = newState;
         UpdatePredictedState();
     }
 
     void UpdatePredictedState()
     {
-        predictedState = character.state;
-        foreach (Vector2 input in pendingMoves)
-            predictedState = CharacterState.Move(predictedState, input, character.Speed, 0);
+        foreach (CharacterInput input in pendingInputs)
+        {
+            ApplyInput(input);
+        }
         character.SyncState(predictedState);
     }
+
+    void ApplyInput(CharacterInput input)
+    {
+        predictedState = CharacterState.Move(predictedState, input, character.Speed, 0);
+    }
+
 }

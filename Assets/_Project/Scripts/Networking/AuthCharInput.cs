@@ -11,15 +11,15 @@ public class AuthCharInput : MonoBehaviour
 {
     public static bool simulated = false;
 
-    List<Vector2> inputBuffer;
+    List<CharacterInput> inputBuffer;
     AuthoritativeCharacter character;
     AuthCharPredictor predictor;
-
+    int currentInput = 0;
     Vector2 simVector;
 
     void Awake()
     {
-        inputBuffer = new List<Vector2>();
+        inputBuffer = new List<CharacterInput>();
         character = GetComponent<AuthoritativeCharacter>();
         predictor = GetComponent<AuthCharPredictor>();
         if (simulated)
@@ -36,8 +36,9 @@ public class AuthCharInput : MonoBehaviour
         Vector2 input = simulated ? SimulatedVector() : new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         if (inputBuffer.Count == 0 && input == Vector2.zero)
             return;
-        predictor.AddInput(input);
-        inputBuffer.Add(input);
+        CharacterInput charInput = new CharacterInput(input, currentInput++);
+        predictor.AddInput(charInput);
+        inputBuffer.Add(charInput);
     }
 
     void FixedUpdate()
@@ -47,14 +48,7 @@ public class AuthCharInput : MonoBehaviour
         character.CmdMove(inputBuffer.ToArray());
         inputBuffer.Clear();
     }
-    
-    CompressedInput[] ConvertInputArray()
-    {
-        var compressedArray = new CompressedInput[inputBuffer.Count];
-        for (int i = 0; i < compressedArray.Length; i++)
-            compressedArray[i] = new CompressedInput(inputBuffer[i]);
-        return compressedArray;
-    }
+
 
     Vector2 SimulatedVector()
     {

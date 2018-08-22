@@ -6,10 +6,11 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AuthCharServer : MonoBehaviour
 {
-    Queue<Vector2> inputBuffer;
+    Queue<CharacterInput> inputBuffer;
     AuthoritativeCharacter character;
     int movesMade;
     int serverTick;
@@ -18,7 +19,7 @@ public class AuthCharServer : MonoBehaviour
 
     void Awake()
     {
-        inputBuffer = new Queue<Vector2>();
+        inputBuffer = new Queue<CharacterInput>();
         character = GetComponent<AuthoritativeCharacter>();
         character.state = CharacterState.Zero;
         charCtrl = GetComponent<CharacterController>();
@@ -34,7 +35,7 @@ public class AuthCharServer : MonoBehaviour
             while ((movesMade < character.InputBufferSize && inputBuffer.Count > 0))
             {
                 state = CharacterState.Move(state, inputBuffer.Dequeue(), character.Speed, serverTick);
-                charCtrl.Move(state.velocity);
+                charCtrl.Move(state.position - charCtrl.transform.position);
                 movesMade++;
             }
             if (movesMade > 0)
@@ -48,10 +49,10 @@ public class AuthCharServer : MonoBehaviour
 
     void FixedUpdate()
     {
-        serverTick++;        
+        serverTick++;    
     }
 
-    public void Move(Vector2[] inputs)
+    public void Move(CharacterInput[] inputs)
     {
         foreach (var input in inputs)
             inputBuffer.Enqueue(input);

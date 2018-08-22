@@ -70,7 +70,7 @@ public class AuthoritativeCharacter : NetworkBehaviour
     }
 
     [Command(channel = 0)]
-    public void CmdMove(Vector2[] inputs)
+    public void CmdMove(CharacterInput[] inputs)
     {
         server.Move(inputs);
     }

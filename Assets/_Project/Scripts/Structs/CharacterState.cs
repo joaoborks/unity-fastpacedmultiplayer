@@ -59,11 +59,11 @@ public struct CharacterState
         };
     }
 
-    public static CharacterState Move(CharacterState previous, Vector2 input, float speed, int timestamp)
+    public static CharacterState Move(CharacterState previous, CharacterInput input, float speed, int timestamp)
     {
         var state =  new CharacterState
         {
-            position = speed * Time.fixedDeltaTime * new Vector3(input.x, 0, input.y) + previous.position,
+            position = speed * Time.fixedDeltaTime * new Vector3(input.dir.x, 0, input.dir.y) + previous.position,
             eulerAngles = previous.eulerAngles,
             moveNum = previous.moveNum + 1,
             timestamp = timestamp
