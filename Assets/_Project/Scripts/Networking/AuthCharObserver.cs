@@ -11,8 +11,7 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
 {
     LinkedList<CharacterState> stateBuffer;
     AuthoritativeCharacter character;
-    CharacterState interpolated;
-    int clientTick;
+    int clientTick = 0;
 
     void Awake()
     {
@@ -24,15 +23,16 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
 
     void Update()
     {
+        int pastTick = clientTick - character.interpolationDelay;
         var fromNode = stateBuffer.First;
         var toNode = fromNode.Next;
-        while (toNode != null && toNode.Value.timestamp <= clientTick)
+        while (toNode != null && toNode.Value.timestamp <= pastTick)
         {
             fromNode = toNode;
             toNode = fromNode.Next;
             stateBuffer.RemoveFirst();
         }
-        SetObservedState(toNode != null ? CharacterState.Interpolate(fromNode.Value, toNode.Value, clientTick) : CharacterState.Extrapolate(fromNode.Value, clientTick));
+        SetObservedState(toNode != null ? CharacterState.Interpolate(fromNode.Value, toNode.Value, pastTick) : fromNode.Value);
     }
 
     void FixedUpdate()
@@ -42,26 +42,21 @@ public class AuthCharObserver : MonoBehaviour, IAuthCharStateHandler
 
     public void OnStateChange(CharacterState newState)
     {
+        clientTick = newState.timestamp;
         AddState(newState);
     }
 
     void AddState(CharacterState state)
     {
-        stateBuffer.AddLast(state);
-        clientTick = state.timestamp;
-        while (stateBuffer.First.Value.timestamp < clientTick)
-            stateBuffer.RemoveFirst();
-        interpolated.timestamp = Mathf.Max(clientTick, stateBuffer.First.Value.timestamp);
-        stateBuffer.AddFirst(interpolated);
-        if (interpolated.timestamp < clientTick)
+        if (stateBuffer.Count > 0 && stateBuffer.Last.Value.timestamp > state.timestamp)
+        {
             return;
-        interpolated.timestamp = clientTick;
-        stateBuffer.AddFirst(interpolated);
+        }
+        stateBuffer.AddLast(state);
     }
 
     void SetObservedState(CharacterState newState)
     {
-        interpolated = newState;
         character.SyncState(newState);
     }
 }

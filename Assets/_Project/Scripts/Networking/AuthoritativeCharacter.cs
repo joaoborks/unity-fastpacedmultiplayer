@@ -24,6 +24,8 @@ public class AuthoritativeCharacter : NetworkBehaviour
     int inputUpdateRate = 10;
     [HideInInspector, SerializeField, Range(5f, 15f)]
     float speed = 6.25f;
+    [SerializeField, Range(1, 60), Tooltip("In steps per second")]
+    public int interpolationDelay = 12;
 
     [SyncVar(hook = "OnServerStateChange")]
     public CharacterState state = CharacterState.Zero;
@@ -70,7 +72,7 @@ public class AuthoritativeCharacter : NetworkBehaviour
     }
 
     [Command(channel = 0)]
-    public void CmdMove(Vector2[] inputs)
+    public void CmdMove(CharacterInput[] inputs)
     {
         server.Move(inputs);
     }
