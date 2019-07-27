@@ -3,7 +3,7 @@ Unity Fast Paced Multiplayer
 
 *A Unity project to build the base functionality for a Authoritative Server, with Lag Compensation, Client side Prediction/Server side Reconciliation and Entity Interpolation*
 
-**WARNING:** Unity has announced they are working on a [new multiplayer framework](https://blogs.unity3d.com/2018/08/02/evolving-multiplayer-games-beyond-unet/) and deprecating UNet on Unity 2018.4 (LTS). This should **not** stop me from working on this project as far as I still find time to dedicate to it.
+**WARNING:** Unity has announced they are working on a [new multiplayer framework](https://blogs.unity3d.com/2018/08/02/evolving-multiplayer-games-beyond-unet/) and deprecating UNet on Unity 2018.4 (LTS). I should **not work** on this anymore since it will be deprecated. There are still alternatives to develop your multiplayer project, [read here](https://blogs.unity3d.com/2019/06/13/navigating-unitys-multiplayer-netcode-transition/) for official Unity support. Otherwise, I'd also recommend you to check out [Bolt](https://www.photonengine.com/bolt), a Multiplayer Framework by [Photon](https://www.photonengine.com/en-US/Photon). Thanks to all the supporters that helped me through the development of this repository!
 
 Based on the references:
 ---
